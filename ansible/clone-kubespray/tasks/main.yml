@@ -1,0 +1,62 @@
+---
+
+- name: Update and upgrade apt packages
+  ansible.builtin.apt:
+    update_cache: true
+
+- name: Set timezone to Europe/Moscow
+  community.general.timezone:
+    name: Europe/Moscow
+
+- name: install Chrony
+  ansible.builtin.apt:
+    name: chrony 
+    state: latest
+    update_cache: true
+
+- name: Install required system packages
+  ansible.builtin.apt:
+    pkg:
+      - python3-pip
+    state: latest
+    update_cache: true
+
+- name: Create directory k8s-cluster
+  ansible.builtin.file:
+    path: { path_k8s_cluster }
+    state: directory
+    mode: 0755
+
+- name: Clone repo Kubespray
+  ansible.builtin.git:
+    repo: "https://github.com/kubernetes-sigs/kubespray.git"
+    dest: { path_kubespray }
+    version: master
+
+- name: Install specified python requirements
+  ansible.builtin.pip:
+    requirements: "/home/admin/k8s-cluster/kubespray/requirements.txt"
+
+- name: Copy file inventory
+  ansible.builtin.copy:
+    src: "/home/maxim/kubernetes/terraform/inventory.ini"
+    dest: "/home/admin/k8s-cluster/"
+    owner: admin 
+    group: admin
+    mode: 0755
+
+- name: Copy file ssh key pub
+  ansible.builtin.copy:
+    src: /home/maxim/kubernetes/mykeys/myansible.key.pub
+    dest: "/home/admin/.ssh/"
+    owner: admin 
+    group: admin
+    mode: 0755
+
+- name: Copy file ssh key
+  ansible.builtin.copy:
+    src: /home/maxim/kubernetes/mykeys/myansible.key
+    dest: "/home/admin/.ssh/"
+    owner: admin 
+    group: admin
+    mode: 0600   

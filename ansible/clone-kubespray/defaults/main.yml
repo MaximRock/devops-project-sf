@@ -1,0 +1,5 @@
+---
+
+path_k8s_cluster: "/home/admin/k8s-cluster/"
+path_kubespray: "/home/admin/k8s-cluster/kubespray/"
+

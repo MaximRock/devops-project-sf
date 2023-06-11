@@ -1,0 +1,18 @@
+---
+- name: Prepare srv
+  hosts: 
+    - srv
+  become: yes    
+  roles:
+    - role: clone-kubespray
+      tags: clone-kubespray
+
+    - role: docker-install 
+      tags: docker-install
+
+    - role: docker-compose-install
+      tags: docker-compose-install
+
+    - role: jenkins-install
+      tags: jenkins-install
+          
